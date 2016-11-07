@@ -1,0 +1,121 @@
+<!--
+ - Created by viktor on 07.11.16.
+ -->
+
+<aura:component description="Test1Contacts" controller="Test1Contacts"  implements="flexipage:availableForAllPageTypes" access="global">
+
+    <aura:attribute name="currentPage" type="Integer" default="1" />
+    <aura:attribute name="pagesTotal" type="Integer" default="1" />
+    <aura:attribute name="itemsPerPage" type="Integer" default="5" />
+
+    <aura:attribute name="searchQuery" type="String" />
+    <aura:attribute name="listContacts" type="Contact[]" />
+
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+
+    <div class="container">
+        <center><ui:spinner aura:id="spinner" isVisible="false"/></center>
+
+        <div class="slds-grid slds-wrap slds-grid--vertical">
+            <div class="slds-col slds-p-around--small slds-size--1-of-1">
+                <h3 class="slds-section-title--divider">{!$Label.c.Test1_Contacts_by_Account_List}</h3>
+            </div>
+            <div class="slds-col slds-p-around--small slds-size--1-of-1">
+                <div class="slds-grid">
+                    <div class="slds-col--padded">
+                        <div class="slds-form-element">
+                            <!--                    <div class="slds-spinner_container">
+                                                    <div class="slds-spinner slds-spinner&#45;&#45;small" role="alert">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </div>-->
+                            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left-right">
+                                <lightning:buttonIcon iconName="utility:search" variant="bare"
+                                                      onclick="{! c.searchAccount }" alternativeText="{!$Label.c.Test1_Search}"
+                                                      class="slds-input__icon slds-input__icon--left slds-icon-text-default"/>
+                                <ui:inputText aura:id="searchInput" value="{!v.searchQuery}" class="slds-input"
+                                              placeholder="{!$Label.c.Test1_Type_to_Search}"
+                                              change="{!c.searchAccount}"
+                                />
+                                <button class="slds-input__icon slds-input__icon--right slds-button slds-button--icon">
+                                    <lightning:buttonIcon iconName="utility:clear" variant="container"
+                                                          onclick="{! c.clearSearch }" alternativeText="|||Clear|||"
+                                                          class="slds-button__icon"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col--padded">
+                        <ui:menu class="slds-dropdown-trigger slds-m-left-small">
+                            <ui:menuTriggerLink class="slds-button slds-button--neutral" aura:id="sortByListTrigger">
+                                <lightning:buttonIcon iconName="utility:down" variant="container"
+                                                      onclick="{! c.clearSearch }" alternativeText="|||Clear|||"
+                                                      class="slds-button__icon"/>
+                            </ui:menuTriggerLink>
+                            <ui:menuList >
+                                <ui:actionMenuItem label="10" click="#" selected="true"
+                                                   class="slds-p-horizontal--small slds-m-bottom--xx-small" />
+                                <ui:actionMenuItem label="25" click="#"
+                                                   class="slds-p-horizontal--small slds-m-bottom--xx-small" />
+                                <ui:actionMenuItem label="50" click="#"
+                                                   class="slds-p-horizontal--small slds-m-bottom--xx-small" />
+                            </ui:menuList>
+                        </ui:menu>
+                    </div>
+                </div>
+            </div>
+
+            <aura:if isTrue="{!v.listContacts.length > 0}">
+                <div class="slds-col slds-p-horizontal--small slds-size--1-of-1">
+                        <c:Test1ContactList />
+                </div>
+                <div class="slds-col slds-p-horizontal--medium slds-size--1-of-1">
+                    <div class="slds-grid slds-grid--align-center slds-m-vertical--medium">
+                        <div class="slds-col--padded">
+                            <aura:if isTrue="{!greaterthan(v.currentPage, 1)}">
+                                <a href="javascript:void(0)" class="slds-button slds-button--brand" onclick="{!c.openPreviousPage}">
+                                        {!$Label.c.PreviousPagination}
+                                </a>
+                                <aura:set attribute="else">
+                                    <div class="slds-button slds-button--neutral">
+                                            {!$Label.c.PreviousPagination}
+                                    </div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                        <div class="slds-col--padded slds-p-top--x-small">
+                            <span class="slds-text-body--regular pages">{!v.currentPage}&nbsp;{!$Label.c.of}&nbsp;{!v.pagesTotal}</span>
+                        </div>
+                        <div class="slds-col--padded">
+                            <aura:if isTrue="{!and(greaterthan(v.pagesTotal, 1), lessthan(v.currentPage, v.pagesTotal))}">
+                                <a href="javascript:void(0)" class="slds-button slds-button--brand" onclick="{!c.openNextPage}">
+                                        {!$Label.c.NextPagination}
+                                </a>
+                                <aura:set attribute="else">
+                                    <div class="slds-button slds-button--neutral">
+                                            {!$Label.c.NextPagination}
+                                    </div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </div>
+                </div>
+
+                <aura:set attribute="else">
+                    <div class="slds-col slds-p-around--small slds-size--1-of-1">
+                        <p class="slds-text-body--large slds-text-align--center slds-m-vertical--medium">
+                            {!empty(v.searchQuery) ? $Label.c.Test1_Search_for_Account : $Label.c.NoItemsMsg}
+                        </p>
+                    </div>
+                </aura:set>
+
+            </aura:if>
+        </div>
+    </div>
+
+
+
+</aura:component>

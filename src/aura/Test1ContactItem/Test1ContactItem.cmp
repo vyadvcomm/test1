@@ -1,0 +1,21 @@
+<!--
+ - Created by viktor on 07.11.16.
+ -->
+
+<aura:component description="Test1ContactItem">
+    <tr>
+        <th scope="row" data-label="Contact Name">
+            <div class="slds-truncate" title="Cloudhub"><a href="javascript:void(0);">Cloudhub</a></div>
+        </th>
+        <td data-label="Contact Email">
+            <div class="slds-truncate" title="Cloudhub">Cloudhub</div>
+        </td>
+        <td data-label="Contact Phones">
+            <div class="slds-truncate" title="Prospecting">Prospecting</div>
+        </td>
+        <td data-label="Contact Address">
+            <div class="slds-truncate" title="jrogers@cloudhub.com"><a href="javascript:void(0);">jrogers@cloudhub.com</a></div>
+        </td>
+    </tr>
+
+</aura:component>

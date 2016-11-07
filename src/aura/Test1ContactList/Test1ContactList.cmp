@@ -1,0 +1,28 @@
+<!--
+ - Created by viktor on 07.11.16.
+ -->
+
+<aura:component description="Test1ContactList">
+    <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+        <thead>
+        <tr class="slds-text-title--caps">
+            <th scope="col">
+                <div class="slds-truncate" title="Contact Name">Name</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="Contact Email">Email</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="Contact Phones">Phones</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="Contact Address">Address</div>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+<c:Test1ContactItem />
+        </tbody>
+    </table>
+
+</aura:component>
