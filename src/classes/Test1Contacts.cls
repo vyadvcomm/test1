@@ -5,20 +5,18 @@
 public with sharing class Test1Contacts{
 
     @AuraEnabled
-    public static List<Account> sFindAccountByName(String searchKey) {
-        if ( String.isEmpty(searchKey)) return new List<Account>();
-        if ( searchKey.length() < 3 ) return new List<Account>();
-        String name = '%' + searchKey + '%';
-        return [SELECT Id, Name FROM Account LIMIT 50];
-        //return [SELECT Id, Name FROM Account WHERE Name LIKE :name LIMIT 50];
-    }
-
-    @AuraEnabled
-    public static List<Contact> sFindContactsByAccountId(String accountId) {
-        if ( String.isEmpty(accountId)) return new List<Contact>();
-
-        return [SELECT Id, Name, Phone, MobilePhone,  Email
-            FROM Contact WHERE AccountId = :accountId];
+    public static List<Contact> findContactByName(String searchKey, Integer itemsPerPage) {
+        if ( String.isEmpty(searchKey)) {
+            return new List<Contact>();
+        }
+        if ( searchKey.length() < 3 ) {
+            return new List<Contact>();
+        }
+        itemsPerPage = Integer.valueOf(itemsPerPage);
+        itemsPerPage = itemsPerPage > 0 ? itemsPerPage : 10;
+                String name = '%' + searchKey + '%';
+        // return [SELECT Id, Name, Phone, MobilePhone,  Email FROM Contact WHERE AccountId != null LIMIT : itemsPerPage];
+        return [SELECT Id, Name, Phone, MobilePhone, Email FROM Contact WHERE AccountId != null AND Name LIKE :name LIMIT : itemsPerPage];
     } // TODO , MailingAddress, OtherAddress
 
     public static String serializeAddress(Address adr) {

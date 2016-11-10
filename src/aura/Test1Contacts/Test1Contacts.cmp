@@ -4,90 +4,96 @@
 
 <aura:component description="Test1Contacts" controller="Test1Contacts"  implements="flexipage:availableForAllPageTypes,force:appHostable" access="global">
 
-    <aura:attribute name="itemsPerPage" type="Integer" default="10" />
+    <aura:attribute name="itemsPerPage" type="Integer" default="10" access="global" description="Show Items per Page"/>
     <aura:attribute name="searchQuery" type="String" />
-    <aura:attribute name="listAccounts" type="Account[]" />
-    <aura:attribute name="AccountId" type="String" />
+    <aura:attribute name="listContacts" type="Contact[]" />
 
     <div class="container">
-        <h1>TTTTTTTTTTTTTTTTTTTTTTTTTTtt</h1>
         <div class="slds-grid slds-wrap slds-grid--vertical">
+
             <div class="slds-col slds-p-around--small slds-size--1-of-1">
                 <h3 class="slds-section-title--divider">{!$Label.c.Test1_Contacts_by_Account_List}</h3>
             </div>
+
+            <!-- Search box -->
             <div class="slds-col slds-p-around--small slds-size--1-of-1">
-                <div class="slds-grid">
-                    <div class="slds-col">
-
-                        <div class="slds-form-element">
-                            <div class="slds-spinner_container slds-hide" aura:id="search-spinner">
-                                <div class="slds-spinner slds-spinner--small" role="alert">
-                                    <span class="slds-assistive-text">Loading</span>
-                                    <div class="slds-spinner__dot-a"></div>
-                                    <div class="slds-spinner__dot-b"></div>
-                                </div>
-                            </div>
-                            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left-right">
-                                <lightning:buttonIcon iconName="utility:search" variant="container"
-                                                      onclick="{!c.searchAccount}" alternativeText="{!$Label.c.Test1_Search}"
-                                                      class="slds-input__icon slds-input__icon--left slds-icon-text-default"/>
-                                <ui:inputText value="{!v.searchQuery}" class="slds-input"
-                                              placeholder="{!$Label.c.Test1_Type_to_Search}"
-                                              keyup="{!c.searchAccount}"
-                                />
-                                <button class="slds-input__icon slds-input__icon--right slds-button slds-button--icon">
-                                    <lightning:buttonIcon iconName="utility:clear" variant="container"
-                                                          onclick="{! c.clearSearch }" alternativeText="{!$label.c.Test1_Clear}"
-                                                          class="slds-button__icon"/>
-                                </button>
-                            </div>
+                <div class="slds-form-element">
+                    <div class="slds-spinner_container slds-hide" aura:id="search-spinner">
+                        <div class="slds-spinner slds-spinner--small" role="alert">
+                            <span class="slds-assistive-text">Loading</span>
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
                         </div>
-
-                        <!-- Account auto completer -->
-                        <aura:if isTrue="{! !empty(v.listAccounts)}">
-                            <div class="slds-form-element">
-                                <div class="slds-lookup__menu slds-show">
-                                    <ul class="slds-lookup__list" role="listbox">
-                                        <aura:iteration items="{!v.listAccounts}" var="a">
-                                            <li role="presentation" onclick="{! c.showContacts }" data-account-id="{!a.Id}">
-                                                <span class="slds-lookup__item-action slds-media slds-media--center" role="option" data-account-id="{!a.Id}">
-                                                    <div class="slds-lookup__result-text" data-account-id="{! a.Id }">{!a.Name}</div>
-                                                </span>
-                                            </li>
-                                        </aura:iteration>
-                                    </ul>
-                                </div>
-                            </div>
-                        </aura:if>
-                        <!-- Account auto completer^ -->
-
                     </div>
-                    <div class="slds-col--bump-right">
-                        <div class="slds-form-element slds-box--border">
-                            <span class="slds-box--small slds-text-align--center slds-m-around--small">
-                                {!v.itemsPerPage}
-                            </span>
-                            <lightning:buttonMenu body="Page Size" menuAlignment="right" aura:id="el_items"
-                                                  onselect="{! c.setPageSize }">
-                                <lightning:menuItem label="10" value="10" checked="{!v.itemsPerPage == 10 ? 'true' : false}" />
-                                <lightning:menuItem label="20" value="20" checked="{!v.itemsPerPage == 20 ? 'true' : false}" />
-                                <lightning:menuItem label="30" value="30" checked="{!v.itemsPerPage == 30 ? 'true' : false}" />
-                            </lightning:buttonMenu>
-                        </div>
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left-right">
+                        <lightning:buttonIcon iconName="utility:search" variant="container"
+                                              onclick="{!c.searchContacts}" alternativeText="{!$Label.c.Test1_Search}"
+                                              class="slds-input__icon slds-input__icon--left slds-icon-text-default"/>
+                        <ui:inputText value="{!v.searchQuery}" class="slds-input"
+                                      placeholder="{!$Label.c.Test1_Type_to_Search}"
+                                      keyup="{!c.searchContacts}"
+                        />
+                        <button class="slds-input__icon slds-input__icon--right slds-button slds-button--icon">
+                            <lightning:buttonIcon iconName="utility:clear" variant="container"
+                                                  onclick="{! c.clearSearch }" alternativeText="{!$label.c.Test1_Clear}"
+                                                  class="slds-button__icon"/>
+                        </button>
                     </div>
                 </div>
             </div>
+            <!-- Search box^ -->
 
-            <aura:if isTrue="{! !empty(v.AccountId)}">
-                <div class="slds-grid slds-grid--frame">
-                    <div class="slds-col slds-size--1-of-1 slds-text-align--center">
-                        <c:Test1ContactList AccountId="{!v.AccountId}" itemsPerPage="{!v.itemsPerPage}"/>
+            <div class="slds-col slds-p-around--small slds-size--1-of-1">
+
+                <!-- Contact List -->
+                <aura:if isTrue="{! !empty(v.listContacts)}">
+                    <div class="slds-grid slds-wrap slds-grid--pull-padded">
+
+                        <!-- Contact List Header -->
+                        <div class="slds-p-around--small slds-theme--shade slds-size--1-of-5">Name</div>
+                        <div class="slds-p-around--small slds-theme--shade slds-size--1-of-5">Email</div>
+                        <div class="slds-p-around--small slds-theme--shade slds-size--1-of-5">Phones</div>
+                        <div class="slds-p-around--small slds-theme--shade slds-size--1-of-5">Address</div>
+                        <div class="slds-p-around--small slds-theme--shade slds-size--1-of-5">&nbsp;</div>
+                        <!-- Contact List Header^ -->
+
+                        <!-- Contact List Body -->
+                        <aura:iteration items="{!v.listContacts}" var="c">
+                            <div class="slds-p-around--small slds-size--1-of-5">
+                                <div class="slds-truncate" title="{!c.Name}">{!c.Name}</div>
+                            </div>
+                            <div class="slds-p-around--small slds-size--1-of-5">
+                                <div class="slds-truncate" title="{!c.Email}">{!c.Email}</div>
+                            </div>
+                            <div class="slds-p-around--small slds-size--1-of-5">
+                                <div class="slds-truncate" title="{!Phone}">{!Phone}</div>
+                            </div>
+                            <div class="slds-p-around--small slds-size--1-of-5">
+                                <div class="slds-truncate" title="jrogers@cloudhub.com">N/A</div>
+                            </div>
+                            <div class="slds-p-around--small slds-size--1-of-5">
+                                <lightning:button variant="brand" label="{!$Label.c.Test1_Show_Contact_Details}"
+                                                  onclick="{! c.showDetails }" />
+                            </div>
+                        </aura:iteration>
+                        <!-- Contact List Body^ -->
+
                     </div>
-                </div>
-            </aura:if>
+                </aura:if>
+                <!-- Contact List^ -->
+
+                <aura:if isTrue="{! empty(v.listContacts)}">
+
+                    <div class="slds-grid slds-grid--frame">
+                        <div class="slds-col slds-size--1-of-1 slds-text-align--center">
+                                {! $Label.c.NoItemsMsg }
+                        </div>
+                    </div>
+
+                </aura:if>
+
+            </div>
+
         </div>
     </div>
-
-
-
 </aura:component>

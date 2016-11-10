@@ -1,0 +1,10 @@
+<!--
+ - Created by viktor on 10.11.16.
+ -->
+
+<design:component>
+    <design:attribute name="itemsPerPage"
+                      label="Items per Page"
+                      default="10"
+                      description="Show Items per Page" />
+</design:component>
