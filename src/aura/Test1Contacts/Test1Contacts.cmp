@@ -7,8 +7,12 @@
     <aura:attribute name="itemsPerPage" type="Integer" default="10" access="global" description="Show Items per Page"/>
     <aura:attribute name="searchQuery" type="String" />
     <aura:attribute name="listContacts" type="Contact[]" />
+    <aura:attribute name="contactId" type="Id" />
+    <aura:attribute name="curContact" type="Contact" />
 
+    <aura:handler name="init" action="{! c.searchContacts}" value="{!this}" />
     <div class="container">
+
         <div class="slds-grid slds-wrap slds-grid--vertical">
 
             <div class="slds-col slds-p-around--small slds-size--1-of-1">
@@ -58,22 +62,26 @@
                         <!-- Contact List Header^ -->
 
                         <!-- Contact List Body -->
-                        <aura:iteration items="{!v.listContacts}" var="c">
+                        <aura:iteration items="{!v.listContacts}" var="cnt">
                             <div class="slds-p-around--small slds-size--1-of-5">
-                                <div class="slds-truncate" title="{!c.Name}">{!c.Name}</div>
+                                <div class="slds-truncate" title="{!cnt.Name}">
+                                    <a href="javascript:void(0);" class="" onclick="{!c.showDetails}">
+                                            {!cnt.Name}
+                                    </a>
+                                </div>
                             </div>
                             <div class="slds-p-around--small slds-size--1-of-5">
-                                <div class="slds-truncate" title="{!c.Email}">{!c.Email}</div>
+                                <div class="slds-truncate" title="{!cnt.Email}">{!cnt.Email}</div>
                             </div>
                             <div class="slds-p-around--small slds-size--1-of-5">
-                                <div class="slds-truncate" title="{!Phone}">{!Phone}</div>
+                                <div class="slds-truncate" title="{!cnt.Phone}">{!cnt.Phone}</div>
                             </div>
                             <div class="slds-p-around--small slds-size--1-of-5">
-                                <div class="slds-truncate" title="jrogers@cloudhub.com">N/A</div>
+                                <div class="slds-truncate" title="{!cnt.Id}">{!cnt.Id}</div>
                             </div>
                             <div class="slds-p-around--small slds-size--1-of-5">
-                                <lightning:button variant="brand" label="{!$Label.c.Test1_Show_Contact_Details}"
-                                                  onclick="{! c.showDetails }" />
+                                <lightning:button variant="brand" label="{!$Label.c.Test1_Goto}"
+                                                  onclick="{!c.navToObject}" value="{!cnt.Id}"/>
                             </div>
                         </aura:iteration>
                         <!-- Contact List Body^ -->
@@ -86,7 +94,7 @@
 
                     <div class="slds-grid slds-grid--frame">
                         <div class="slds-col slds-size--1-of-1 slds-text-align--center">
-                                {! $Label.c.NoItemsMsg }
+                                {!$Label.c.NoItemsMsg}
                         </div>
                     </div>
 
@@ -95,5 +103,38 @@
             </div>
 
         </div>
+
+        <aura:if isTrue="{! !empty(v.curContact)}">
+            <div aura:id="record" class="slds-docked_container" >
+                    <lightning:card footer="Card Footer">
+                        <aura:set attribute="title">
+                            <h2>{!v.contactId}</h2>
+                        </aura:set>
+                        <aura:set attribute="actions">
+                            <lightning:buttonIcon  iconName="utility:close" variant="container"
+                                                   alternativeText="{!$Label.c.Close}" onclick="{!c.closeObject}"/>
+                        </aura:set>
+                        <aura:set attribute="footer">
+                            <lightning:button label="{!$Label.c.Test1_Make_Me_Red}"/>
+                        </aura:set>
+                        <div class="slds-grid slds-wrap slds-grid--vertical">
+                            <div class="slds-size--1-of-1 slds-text-align--center">
+                                    {!v.curContact.Name}
+                            </div>
+                            <div class="slds-size--1-of-1 slds-text-align--center">
+                                    {!v.curContact.Email}
+                            </div>
+                            <div class="slds-size--1-of-1 slds-text-align--center">
+                                    {!v.curContact.Phone}
+                            </div>
+                            <div class="slds-size--1-of-1 slds-text-align--center">
+                                    N/A
+                            </div>
+                        </div>
+                        <!-- <force:recordView recordId="{!v.contactId}" type="FULL"/> -->
+                    </lightning:card>
+            </div>
+        </aura:if>
+
     </div>
 </aura:component>
